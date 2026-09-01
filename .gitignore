@@ -7,4 +7,23 @@
 *.suo
 *.userosscache
 *.sln.docstates
+
+## Sensitive Configuration Files & Connection Strings
 appsettings.Development.json
+appsettings.Production.json
+appsettings.Local.json
+appsettings.secrets.json
+*.env
+*.env.*
+!.env.example
+
+## Security Certificates & Keys
+*.pfx
+*.pem
+*.key
+*.crt
+*.cer
+
+## Logs & Diagnostics
+*.log
+*.dmp
