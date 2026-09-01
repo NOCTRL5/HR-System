@@ -1,0 +1,85 @@
+@page
+@model EmployeeViewer.Pages.Employees.CreateModel
+@{
+    ViewData["Title"] = "Add New Employee";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="main-card">
+            <div class="d-flex align-items-center mb-4">
+                <a asp-page="./Index" class="btn btn-outline-secondary me-3">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <div>
+                    <h3 class="fw-bold mb-0">Add New Employee</h3>
+                    <small class="text-muted">Executes <code>sp_CreateEmployee</code> Stored Procedure</small>
+                </div>
+            </div>
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Employee.FirstName" class="form-label fw-semibold"></label>
+                        <input asp-for="Employee.FirstName" class="form-control" placeholder="e.g. John" />
+                        <span asp-validation-for="Employee.FirstName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Employee.LastName" class="form-label fw-semibold"></label>
+                        <input asp-for="Employee.LastName" class="form-control" placeholder="e.g. Doe" />
+                        <span asp-validation-for="Employee.LastName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Employee.Email" class="form-label fw-semibold"></label>
+                        <input asp-for="Employee.Email" class="form-control" placeholder="john.doe@company.com" />
+                        <span asp-validation-for="Employee.Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Employee.Phone" class="form-label fw-semibold"></label>
+                        <input asp-for="Employee.Phone" class="form-control" placeholder="e.g. +1 555-0199" />
+                        <span asp-validation-for="Employee.Phone" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Employee.HireDate" class="form-label fw-semibold"></label>
+                        <input asp-for="Employee.HireDate" type="date" class="form-control" />
+                        <span asp-validation-for="Employee.HireDate" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Employee.Salary" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input asp-for="Employee.Salary" class="form-control" placeholder="75000.000" step="0.001" />
+                        </div>
+                        <span asp-validation-for="Employee.Salary" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label asp-for="Employee.ManagerID" class="form-label fw-semibold"></label>
+                        <input asp-for="Employee.ManagerID" class="form-control" placeholder="Optional Manager Employee ID" />
+                        <span asp-validation-for="Employee.ManagerID" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-page="./Index" class="btn btn-light border px-4">Cancel</a>
+                    <button type="submit" class="btn btn-primary-gradient px-4">
+                        <i class="bi bi-check-lg me-1"></i> Save Employee
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

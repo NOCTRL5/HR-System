@@ -1,0 +1,79 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Welcome - Employee Management Portal";
+}
+
+<div class="row g-4">
+    <!-- Hero Banner -->
+    <div class="col-12">
+        <div class="hero-banner p-5">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="badge badge-sp mb-3">
+                        <i class="bi bi-cpu-fill me-1"></i> ADO.NET & SQL Stored Procedures
+                    </span>
+                    <h1 class="display-4 fw-bold mb-3">Enterprise Employee Viewer</h1>
+                    <p class="lead text-light opacity-75 mb-4">
+                        A high-performance web server application powered by native SQL queries, Stored Procedures, and User-Defined Functions. Built for scalability, maintainability, and seamless AI Agent integration.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a asp-page="/Employees/Index" class="btn btn-lg btn-primary-gradient px-4 py-3 rounded-3 fs-6">
+                            <i class="bi bi-search me-2"></i> Launch Directory Viewer
+                        </a>
+                        <a asp-page="/Employees/Create" class="btn btn-lg btn-outline-light px-4 py-3 rounded-3 fs-6">
+                            <i class="bi bi-person-plus-fill me-2"></i> Add New Employee
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center text-lg-end mt-4 mt-lg-0">
+                    <div class="stat-card bg-dark bg-opacity-50 text-white border-light border-opacity-25 p-4 text-center">
+                        <div class="display-3 fw-extrabold text-info mb-1">@Model.TotalEmployees</div>
+                        <div class="text-uppercase tracking-wider text-light opacity-75 small">Total Registered Employees</div>
+                        <hr class="border-light opacity-25 my-3" />
+                        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25">
+                            <i class="bi bi-check-circle-fill me-1"></i> Database Connected
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="col-md-4">
+        <div class="stat-card h-100">
+            <div class="stat-icon bg-primary bg-opacity-10 text-primary mb-3">
+                <i class="bi bi-lightning-charge-fill"></i>
+            </div>
+            <h5 class="fw-bold mb-2">Stored Procedure Engine</h5>
+            <p class="text-muted mb-0">
+                Server-side search filtering and pagination powered directly by <code>sp_GetEmployeesPagedAndFiltered</code> for maximum database performance.
+            </p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card h-100">
+            <div class="stat-icon bg-success bg-opacity-10 text-success mb-3">
+                <i class="bi bi-database-gear"></i>
+            </div>
+            <h5 class="fw-bold mb-2">SQL Functions & CRUD</h5>
+            <p class="text-muted mb-0">
+                Utilizes scalar functions like <code>fn_FormatEmployeeName</code> and full CRUD stored procedures for complete employee lifecycle management.
+            </p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card h-100">
+            <div class="stat-icon bg-info bg-opacity-10 text-info mb-3">
+                <i class="bi bi-robot"></i>
+            </div>
+            <h5 class="fw-bold mb-2">AI Agent Ready</h5>
+            <p class="text-muted mb-0">
+                Decoupled Service and Repository layer architecture makes it effortless to integrate AI Agents or automated tools in the future.
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,178 @@
+@page
+@model EmployeeViewer.Pages.Employees.IndexModel
+@{
+    ViewData["Title"] = "Employee Directory";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-people-fill text-primary me-2"></i>Employee Directory
+        </h2>
+        <p class="text-muted mb-0">Powered by <code>sp_GetEmployeesPagedAndFiltered</code> Stored Procedure</p>
+    </div>
+    <div>
+        <a asp-page="./Create" class="btn btn-primary-gradient px-4 py-2 rounded-pill shadow-sm">
+            <i class="bi bi-person-plus-fill me-2"></i>Add New Employee
+        </a>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert @(Model.StatusMessage.StartsWith("Error") ? "alert-danger" : "alert-success") alert-dismissible fade show shadow-sm" role="alert">
+        <i class="bi @(Model.StatusMessage.StartsWith("Error") ? "bi-exclamation-triangle-fill" : "bi-check-circle-fill") me-2"></i>
+        @Model.StatusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="main-card mb-4">
+    <!-- Search & Filter Bar -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-9">
+            <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
+                <span class="input-group-text bg-white border-end-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" asp-for="SearchTerm" class="form-control border-start-0 ps-0" placeholder="Search by name, email, or phone number..." />
+                @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                {
+                    <a asp-page="./Index" class="btn btn-outline-secondary d-flex align-items-center">
+                        <i class="bi bi-x-lg me-1"></i> Clear
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-lg btn-dark w-100 shadow-sm fw-semibold">
+                <i class="bi bi-funnel-fill me-2"></i> Apply Filter
+            </button>
+        </div>
+    </form>
+
+    <!-- Table Result -->
+    <div class="table-responsive">
+        <table class="table custom-table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Hire Date</th>
+                    <th>Salary ($)</th>
+                    <th>Manager ID</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.PagedEmployees.Items.Any())
+                {
+                    @foreach (var emp in Model.PagedEmployees.Items)
+                    {
+                        <tr>
+                            <td class="fw-bold text-secondary">#@emp.ID</td>
+                            <td>
+                                <div class="fw-bold text-dark">@emp.FullName</div>
+                                <small class="text-muted">@emp.FirstName @emp.LastName</small>
+                            </td>
+                            <td>
+                                <a href="mailto:@emp.Email" class="text-decoration-none text-primary">@emp.Email</a>
+                            </td>
+                            <td>@(string.IsNullOrEmpty(emp.Phone) ? "N/A" : emp.Phone)</td>
+                            <td>@emp.HireDate.ToString("yyyy-MM-dd")</td>
+                            <td class="fw-semibold text-success">$@emp.Salary.ToString("N3")</td>
+                            <td>
+                                @(emp.ManagerID.HasValue ? $"#{emp.ManagerID}" : "None")
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a asp-page="./Details" asp-route-id="@emp.ID" class="btn btn-outline-info" title="View Details">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    <a asp-page="./Edit" asp-route-id="@emp.ID" class="btn btn-outline-warning" title="Edit">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@emp.ID" title="Delete">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Delete Confirmation Modal -->
+                                <div class="modal fade text-start" id="deleteModal-@emp.ID" tabindex="-1" aria-labelledby="deleteModalLabel-@emp.ID" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel-@emp.ID">
+                                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Delete
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete employee <strong>@emp.FullName</strong> (ID: #@emp.ID)?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <form method="post" asp-page-handler="Delete" asp-route-id="@emp.ID">
+                                                    <button type="submit" class="btn btn-danger">Delete Employee</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <div class="text-muted fs-5">
+                                <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                                No employee records found matching your criteria.
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    @if (Model.PagedEmployees.TotalPages > 1)
+    {
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 pt-3 border-top gap-3">
+            <div class="text-muted small">
+                Showing <strong>@Model.PagedEmployees.Items.Count</strong> of <strong>@Model.PagedEmployees.TotalRecords</strong> records (Page @Model.PagedEmployees.PageNumber of @Model.PagedEmployees.TotalPages)
+            </div>
+            <nav aria-label="Employee directory pagination">
+                <ul class="pagination pagination-md mb-0">
+                    <!-- Previous Button -->
+                    <li class="page-item @(!Model.PagedEmployees.HasPreviousPage ? "disabled" : "")">
+                        <a class="page-link" asp-page="./Index" asp-route-searchTerm="@Model.SearchTerm" asp-route-pageNumber="@(Math.Max(1, Model.PagedEmployees.PageNumber - 1))">
+                            <i class="bi bi-chevron-left me-1"></i> Previous
+                        </a>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    @for (int i = 1; i <= Model.PagedEmployees.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PagedEmployees.PageNumber ? "active" : "")">
+                            <a class="page-link" asp-page="./Index" asp-route-searchTerm="@Model.SearchTerm" asp-route-pageNumber="@i">@i</a>
+                        </li>
+                    }
+
+                    <!-- Next Button -->
+                    <li class="page-item @(!Model.PagedEmployees.HasNextPage ? "disabled" : "")">
+                        <a class="page-link" asp-page="./Index" asp-route-searchTerm="@Model.SearchTerm" asp-route-pageNumber="@(Math.Min(Model.PagedEmployees.TotalPages, Model.PagedEmployees.PageNumber + 1))">
+                            Next <i class="bi bi-chevron-right ms-1"></i>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+    }
+</div>
